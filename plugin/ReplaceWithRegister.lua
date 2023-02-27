@@ -136,7 +136,7 @@ end
 -- This mapping repeats naturally, because it just sets global things, and Vim is
 -- able to repeat the g@ on its own.
 vim.keymap.set("n", "<Plug>ReplaceWithRegisterOperator", function()
-	return vim.fn["ReplaceWithRegister#OperatorExpression"]()
+	return require("ReplaceWithRegister").OperatorExpression()
 end, { expr = true })
 -- But we need repeat.vim to get the expression register re-evaluated: When Vim's
 -- . command re-invokes 'opfunc', the expression isn't re-evaluated, an
@@ -156,24 +156,24 @@ vim.keymap.set(
 vim.keymap.set("n", "<Plug>ReplaceWithRegisterLine", function()
 	vim.fn.setline(".", vim.fn.getline("."))
 	vim.fn["repeat#setreg"](t("<Plug>ReplaceWithRegisterLine"), vim.v.register)
-	vim.fn["ReplaceWithRegister#SetRegister"]()
-	if vim.fn["ReplaceWithRegister#IsExprReg"]() == 1 then
+	require("ReplaceWithRegister").SetRegister()
+	if require("ReplaceWithRegister").IsExprReg() then
 		vim.g.ReplaceWithRegister_expr = vim.fn.getreg("=")
 	end
 	vim.cmd("normal! V" .. vim.v.count1 .. t("_<Esc>"))
 	-- 	vim.api.nvim_feedkeys("V" .. vim.v.count1 .. "_<Esc>", "n", true)
-	vim.fn["ReplaceWithRegister#Operator"]("visual", t("<Plug>ReplaceWithRegisterLine"))
+	require("ReplaceWithRegister").Operator("visual", t("<Plug>ReplaceWithRegisterLine"))
 end, { silent = true })
 
 -- Repeat not defined in visual mode, but enabled through visualrepeat.vim.
 vim.keymap.set("v", "<Plug>ReplaceWithRegisterVisual", function()
 	vim.fn.setline(".", vim.fn.getline("."))
 	vim.fn["repeat#setreg"](t("<Plug>ReplaceWithRegisterVisual"), vim.v.register)
-	vim.fn["ReplaceWithRegister#SetRegister"]()
-	if vim.fn["ReplaceWithRegister#IsExprReg"]() == 1 then
+	require("ReplaceWithRegister").SetRegister()
+	if require("ReplaceWithRegister").IsExprReg() then
 		vim.g.ReplaceWithRegister_expr = vim.fn.getreg("=")
 	end
-	vim.fn["ReplaceWithRegister#Operator"]("visual", t("<Plug>ReplaceWithRegisterVisual"))
+	require("ReplaceWithRegister").Operator("visual", t("<Plug>ReplaceWithRegisterVisual"))
 end)
 
 -- A normal-mode repeat of the visual mapping is triggered by repeat.vim. It
@@ -187,12 +187,12 @@ end)
 vim.keymap.set("n", "<Plug>ReplaceWithRegisterVisual", function()
 	vim.fn.setline(".", vim.fn.getline("."))
 	vim.fn["repeat#setreg"](t("<Plug>ReplaceWithRegisterVisual"), vim.v.register)
-	vim.fn["ReplaceWithRegister#SetRegister"]()
-	if vim.fn["ReplaceWithRegister#IsExprReg"]() == 1 then
+	require("ReplaceWithRegister").SetRegister()
+	if require("ReplaceWithRegister").IsExprReg() then
 		vim.g.ReplaceWithRegister_expr = vim.fn.getreg("=")
 	end
-	vim.cmd("normal! " .. vim.fn["ReplaceWithRegister#VisualMode"]())
-	vim.fn["ReplaceWithRegister#Operator"]("visual", t("<Plug>ReplaceWithRegisterVisual"))
+	vim.cmd("normal! " .. require("ReplaceWithRegister").VisualMode())
+	require("ReplaceWithRegister").Operator("visual", t("<Plug>ReplaceWithRegisterVisual"))
 end, { silent = true })
 
 if vim.fn.hasmapto("<Plug>ReplaceWithRegisterOperator", "n") == 0 then
