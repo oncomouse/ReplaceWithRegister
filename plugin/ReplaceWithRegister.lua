@@ -142,7 +142,6 @@ end, { expr = true })
 -- . command re-invokes 'opfunc', the expression isn't re-evaluated, an
 -- inconsistency with the other mappings. We creatively use repeat.vim to sneak
 -- in the expression evaluation then.
--- nnoremap <silent> <Plug>ReplaceWithRegisterExpressionSpecial :<C-u>let g:ReplaceWithRegister_expr = getreg('=')<Bar>execute 'normal!' v:count1 . '.'<CR>
 vim.keymap.set(
 	"n",
 	"<Plug>ReplaceWithRegisterExpressionSpecial",
@@ -151,8 +150,7 @@ vim.keymap.set(
 )
 
 -- This mapping needs repeat.vim to be repeatable, because it consists of
--- multiple steps (visual selection + 'c' command inside
--- ReplaceWithRegister#Operator).
+-- multiple steps (visual selection + 'c' command inside ReplaceWithRegister#Operator).
 vim.keymap.set("n", "<Plug>ReplaceWithRegisterLine", function()
 	vim.fn.setline(".", vim.fn.getline("."))
 	vim.fn["repeat#setreg"](t("<Plug>ReplaceWithRegisterLine"), vim.v.register)
@@ -161,7 +159,6 @@ vim.keymap.set("n", "<Plug>ReplaceWithRegisterLine", function()
 		vim.g.ReplaceWithRegister_expr = vim.fn.getreg("=")
 	end
 	vim.cmd("normal! V" .. vim.v.count1 .. t("_<Esc>"))
-	-- 	vim.api.nvim_feedkeys("V" .. vim.v.count1 .. "_<Esc>", "n", true)
 	require("ReplaceWithRegister").Operator("visual", t("<Plug>ReplaceWithRegisterLine"))
 end, { silent = true })
 
